@@ -86,7 +86,7 @@ def make_zip(stage, output):
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
         members = [path for path in Path(stage).rglob("*") if path.is_file()]
-        for path in sorted(members, key=lambda item: item.relative_to(stage).as_posix().casefold()):
+        for path in sorted(members, key=lambda item: (item.relative_to(stage).as_posix().casefold(), item.relative_to(stage).as_posix())):
             if not path.is_file():
                 continue
             rel = path.relative_to(stage).as_posix()

@@ -16,7 +16,7 @@ def tree_hash(name):
     base = root / name
     h = hashlib.sha256()
     files = []
-    for path in sorted(base.rglob("*")):
+    for path in sorted(base.rglob("*"), key=lambda item: item.relative_to(root).as_posix()):
         if not path.is_file():
             continue
         rel = path.relative_to(root).as_posix()

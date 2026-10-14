@@ -69,8 +69,19 @@ jobs:
           python3 tests/check-zip.py build/SUSFS4LKM-arm64.zip tools/variants.txt
           cd build
           sha256sum SUSFS4LKM-arm64.zip SUSFS4LKM-arm64.provenance.json ROLLBACK.sh > SHA256SUMS
-      - uses: softprops/action-gh-release@v2
+      - uses: actions/upload-artifact@v4
+        if: github.ref_type != 'tag'
         with:
+          name: SUSFS4LKM-arm64
+          path: |
+            build/SUSFS4LKM-arm64.zip
+            build/SUSFS4LKM-arm64.provenance.json
+            build/SHA256SUMS
+            build/ROLLBACK.sh
+      - uses: softprops/action-gh-release@v2
+        if: github.ref_type == 'tag'
+        with:
+          overwrite_files: true
           files: |
             build/SUSFS4LKM-arm64.zip
             build/SUSFS4LKM-arm64.provenance.json
