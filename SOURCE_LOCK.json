@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tree_sha256": "da96db156ff7b6d94b26fab73db70f1e0abee36bfbc9cf425c502f9c396e07b1",
+  "tree_sha256": "91d2ad9bb646103641c17f3db66ebdf8deb94a228716dd9d459529070125a406",
   "categories": {
     "sources": {
       "files": 230,
@@ -19,8 +19,8 @@
       "sha256": "9f2ac00798331fe62061d72b5443f155f73f83edd26ed364739464d295b8a09f"
     },
     "tests": {
-      "files": 11,
-      "sha256": "f4a48e6f88195e761d02b5ad4cb05dfd469b381532d6f242e26d44a18366ddfd"
+      "files": 12,
+      "sha256": "ed10867126476680e15e1f8e822b509a03b3ef7d4c47249019f1ae99c89b6be1"
     }
   },
   "files": [
@@ -1063,6 +1063,10 @@
     {
       "path": "tests/device/kstat-full.sh",
       "sha256": "3432f7e0421a91b89c9fb8a2712be65fb533c69b2a635178827c900f7adee4b7"
+    },
+    {
+      "path": "tests/device/matrix.sh",
+      "sha256": "58c06f007df3b7915a76d353f5260bb882611eb6e7e4f470ea65143e1edd23a9"
     },
     {
       "path": "tests/device/opath.sh",
