@@ -1,8 +1,8 @@
 schema: 1
 module:
   id: susfs4ksu_unified
-  version: v0.1.0
-  versionCode: 100
+  version: v0.1.1
+  versionCode: 101
 target:
   arch: arm64
   kmi: android14-6.1

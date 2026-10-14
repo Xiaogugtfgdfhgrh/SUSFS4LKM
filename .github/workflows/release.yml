@@ -11,8 +11,6 @@ permissions:
 
 env:
   NDK_VERSION: 29.0.14206865
-  QUALIFIED_VARIANT: android14-6.1
-  QUALIFIED_DDK_DIGEST: sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3
 
 jobs:
   prepare:
@@ -105,14 +103,14 @@ jobs:
       fail-fast: false
       matrix:
         variant:
-          - android12-5.10
-          - android13-5.10
-          - android13-5.15
-          - android14-5.15
-          - android14-6.1
-          - android15-6.6
-          - android16-6.12
-          - android17-6.18
+          - { name: android12-5.10, digest: "sha256:272ada1e61c525116032246df2a790d1ccec1804b7a9e0b09203c5e650dcb78e" }
+          - { name: android13-5.10, digest: "sha256:e5ce038ba38408ad26aae1f2622cfb44dfbf6634b025bf197aa08beac0794f5b" }
+          - { name: android13-5.15, digest: "sha256:9e68cd9fcab748584755d31ba88ef134efc938dbde17f258c2652315f6cd81cd" }
+          - { name: android14-5.15, digest: "sha256:bbf697a8fe995704268eef710921c9d2ea4f146954690d7ea97887f3a4014a6a" }
+          - { name: android14-6.1, digest: "sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3" }
+          - { name: android15-6.6, digest: "sha256:51159bc935c75a282fc65bc87e02f16bd098d1cdf55dc558c4fdd0fcf7a132e2" }
+          - { name: android16-6.12, digest: "sha256:fd3ec5cc71d7f2716212e9df8d5674a9afe68fb769282fcac87b83f207f949ee" }
+          - { name: android17-6.18, digest: "sha256:fb8b66200bf402cf65a751060fc1aa29524b9fa8840feef16c7b196a4f3f0e6e" }
     steps:
       - uses: actions/checkout@v4
       - uses: actions/download-artifact@v4
@@ -125,16 +123,16 @@ jobs:
           docker image prune -af
       - name: build lkm
         env:
-          SUSFS_DDK_DIGEST: ${{ matrix.variant == env.QUALIFIED_VARIANT && env.QUALIFIED_DDK_DIGEST || '' }}
+          SUSFS_DDK_DIGEST: ${{ matrix.variant.digest }}
         run: |
           mkdir -p build/ko
-          SUSFS_BUILD_ROOT="$PWD/build" sh tools/build-lkm.sh "$PWD" "$PWD/build" "${{ matrix.variant }}"
+          SUSFS_BUILD_ROOT="$PWD/build" sh tools/build-lkm.sh "$PWD" "$PWD/build" "${{ matrix.variant.name }}"
       - uses: actions/upload-artifact@v4
         with:
-          name: lkm-${{ matrix.variant }}
+          name: lkm-${{ matrix.variant.name }}
           path: |
-            build/ko/susfs_guard_lkm-${{ matrix.variant }}.ko
-            build/ko/ddk-${{ matrix.variant }}.json
+            build/ko/susfs_guard_lkm-${{ matrix.variant.name }}.ko
+            build/ko/ddk-${{ matrix.variant.name }}.json
           retention-days: 1
 
   package:
@@ -178,6 +176,7 @@ jobs:
           cp tools/ROLLBACK.sh build/ROLLBACK.sh
           python3 tests/check-ko.py tools/variants.txt build/ko
           python3 tests/check-zip.py build/SUSFS4LKM-arm64.zip tools/variants.txt
+          python3 tools/release-body.py . build/SUSFS4LKM-arm64.provenance.json build/SUSFS4LKM-arm64.zip build/release-body.md
           cd build
           sha256sum SUSFS4LKM-arm64.zip SUSFS4LKM-arm64.provenance.json ROLLBACK.sh > SHA256SUMS
       - uses: actions/upload-artifact@v4
@@ -193,6 +192,7 @@ jobs:
         if: github.ref_type == 'tag'
         with:
           overwrite_files: true
+          body_path: build/release-body.md
           files: |
             build/SUSFS4LKM-arm64.zip
             build/SUSFS4LKM-arm64.provenance.json

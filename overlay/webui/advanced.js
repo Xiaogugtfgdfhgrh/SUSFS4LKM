@@ -41,6 +41,24 @@ async function refresh() {
     }
 }
 
+async function gateOnBackend() {
+    try {
+        const result = await ctl({ operation: "status" });
+        if (result.backend === "lkm") return true;
+        status.textContent = `advanced page disabled: backend=${result.backend || "none"}`;
+        for (const element of document.querySelectorAll("button, input, select, textarea")) {
+            element.disabled = true;
+        }
+        return false;
+    } catch (error) {
+        status.textContent = `advanced page disabled: ${String(error)}`;
+        for (const element of document.querySelectorAll("button, input, select, textarea")) {
+            element.disabled = true;
+        }
+        return false;
+    }
+}
+
 for (const [id, request] of Object.entries(api)) {
     document.getElementById(id).addEventListener("click", () => invoke(request));
 }
@@ -92,4 +110,6 @@ document.getElementById("rule_save").addEventListener("click", () => {
     invoke({ operation: "rules.replace", values: { rule, content } });
 });
 
-refresh();
+if (await gateOnBackend()) {
+    refresh();
+}

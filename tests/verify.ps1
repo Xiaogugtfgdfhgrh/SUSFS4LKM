@@ -1,10 +1,10 @@
 ﻿$ErrorActionPreference = "Stop"
 $Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$Build = "D:\CodexBuild\susfs4ksu-unified"
-$Clang = "C:\Users\Admin（无密码）\AppData\Local\Android\Sdk\ndk\29.0.14206865\toolchains\llvm\prebuilt\windows-x86_64\bin\clang.exe"
-$Bash = "C:\Program Files\Git\bin\bash.exe"
-$Python = "C:\Users\Admin（无密码）\AppData\Local\Programs\Python\Python312\python.exe"
-$Objdump = "C:\Users\Admin（无密码）\AppData\Local\Android\Sdk\ndk\29.0.14206865\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-objdump.exe"
+$Build = if ($env:SUSFS_BUILD_ROOT) { $env:SUSFS_BUILD_ROOT } else { "D:\CodexBuild\susfs4ksu-unified" }
+$Clang = if ($env:SUSFS_CLANG) { $env:SUSFS_CLANG } else { "C:\Users\Admin（无密码）\AppData\Local\Android\Sdk\ndk\29.0.14206865\toolchains\llvm\prebuilt\windows-x86_64\bin\clang.exe" }
+$Bash = if ($env:SUSFS_BASH) { $env:SUSFS_BASH } else { "C:\Program Files\Git\bin\bash.exe" }
+$Python = if ($env:SUSFS_PYTHON) { $env:SUSFS_PYTHON } else { "C:\Users\Admin（无密码）\AppData\Local\Programs\Python\Python312\python.exe" }
+$Objdump = if ($env:SUSFS_OBJDUMP) { $env:SUSFS_OBJDUMP } else { "C:\Users\Admin（无密码）\AppData\Local\Android\Sdk\ndk\29.0.14206865\toolchains\llvm\prebuilt\windows-x86_64\bin\llvm-objdump.exe" }
 $KoDir = Join-Path $Build "ko"
 $VariantList = Join-Path $Build "variants.txt"
 

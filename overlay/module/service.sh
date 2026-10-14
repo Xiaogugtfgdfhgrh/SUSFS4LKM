@@ -39,7 +39,7 @@ sus_su_2(){
 	return
 }
 
-[ $sus_su = -1 ] && {
+[ $sus_su = -1 ] && [ "${SUSFS_DECIMAL_MAIN:-0}" -lt 2 ] 2>/dev/null && {
 	if [ -n "$version" ] && [ "$SUSFS_DECIMAL_MAIN" -ge 1 ] && [ "$SUSFS_DECIMAL_SUB" -ge 5 ] && [ "$SUSFS_DECIMAL_PATCH" -ge 3 ] 2>/dev/null; then
 		if echo "$susfs_features" | grep -q "CONFIG_KSU_SUSFS_SUS_SU"; then
   			sed -i "s/^sus_su=.*/sus_su=0/" ${PERSISTENT_DIR}/config.sh
@@ -54,7 +54,7 @@ sus_su_2(){
 	fi
 }
 
-[ $sus_su = 0 ] && {
+[ $sus_su = 0 ] && [ "${SUSFS_DECIMAL_MAIN:-0}" -lt 2 ] 2>/dev/null && {
 	if [ -n "$version" ] && [ "$SUSFS_DECIMAL_MAIN" -ge 1 ] && [ "$SUSFS_DECIMAL_SUB" -ge 5 ] && [ "$SUSFS_DECIMAL_PATCH" -ge 3 ] 2>/dev/null; then
 		if ! echo "$susfs_features" | grep -q "CONFIG_KSU_SUSFS_SUS_SU"; then
 			sed -i "s/^sus_su=.*/sus_su=-1/" ${PERSISTENT_DIR}/config.sh
@@ -71,7 +71,7 @@ sus_su_2(){
 	fi
 }
 
-[ $sus_su = 2 ] && {
+[ $sus_su = 2 ] && [ "${SUSFS_DECIMAL_MAIN:-0}" -lt 2 ] 2>/dev/null && {
 	if [ -n "$version" ] && [ "$SUSFS_DECIMAL_MAIN" -ge 1 ] && [ "$SUSFS_DECIMAL_SUB" -ge 5 ] && [ "$SUSFS_DECIMAL_PATCH" -ge 3 ] 2>/dev/null; then
 		if echo "$susfs_features" | grep -q "CONFIG_KSU_SUSFS_SUS_SU"; then
 			${SUSFS_BIN} sus_su 2

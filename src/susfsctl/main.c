@@ -389,8 +389,10 @@ static void prt_not_supported(unsigned long cmd, int err) {
 
 
 static int parse_version_string(const char *s) {
-    int ma = 0, mi = 0, pa = 0;
-    if (sscanf(s, "v%d.%d.%d", &ma, &mi, &pa) != 3)
+    int ma = 0, mi = 0, pa = 0, used = 0;
+    if (sscanf(s, "v%d.%d.%d%n", &ma, &mi, &pa, &used) != 3)
+        return 0;
+    if (s[used] != '\0' && s[used] != '-' && s[used] != '+')
         return 0;
     if ((ma == 2) && (mi >= 1) && (mi <= 3)) return 2100;
     if ((ma == 2) && (mi == 0)) return 2000;
@@ -2208,6 +2210,9 @@ static int proc_operation(const char *operation, cJSON *values) {
     if (!strcmp(operation, "modules.set") || !strcmp(operation, "mounts.set")) {
         cJSON *items = cJSON_GetObjectItemCaseSensitive(values, "items");
         if (!cJSON_IsArray(items)) return -EINVAL;
+        const char *node = !strcmp(operation, "modules.set") ? "/proc/susfs_hide_modules" : "/proc/susfs_hide_mounts";
+        if (cJSON_GetArraySize(items) == 0)
+            return write_node(node, "clear");
         snprintf(command, sizeof(command), "set");
         cJSON *item = NULL;
         cJSON_ArrayForEach(item, items) {
@@ -2222,7 +2227,7 @@ static int proc_operation(const char *operation, cJSON *values) {
             strcat(command, " ");
             strcat(command, item->valuestring);
         }
-        return write_node(!strcmp(operation, "modules.set") ? "/proc/susfs_hide_modules" : "/proc/susfs_hide_mounts", command);
+        return write_node(node, command);
     }
     if (!strcmp(operation, "log.set") || !strcmp(operation, "avc.set")) {
         bool enabled = false;
@@ -2364,8 +2369,15 @@ static int json_dispatch(cJSON *root) {
     }
 
     int rc = proc_operation(operation, values);
-    if (rc == -ENOTSUP)
+    if (rc == -ENOTSUP) {
+        if (g_backend_state == PROBE_NONE)
+            return emit_error("no susfs backend", 3, make_status_data());
+        if (g_backend_state == PROBE_PERMISSION)
+            return emit_error("root permission required", 5, make_status_data());
+        if (g_backend_state == PROBE_PROTOCOL || g_backend_state == PROBE_UNKNOWN)
+            return emit_error("susfs protocol error", 6, make_status_data());
         return emit_error("operation is not available for this backend", 4, NULL);
+    }
     if (rc == -EINVAL || rc == -E2BIG)
         return emit_error("invalid operation values", 2, NULL);
     if (rc)
@@ -2378,7 +2390,10 @@ static int json_dispatch(cJSON *root) {
 static int json_main(int argc, char **argv) {
     if (argc != 3)
         return emit_error("usage: susfsctl --json <request>", 2, NULL);
-    cJSON *root = cJSON_Parse(argv[2]);
+    for (const char *p = argv[2]; (p = strstr(p, "\\u0000")) != NULL; p += 6) {
+        return emit_error("invalid json", 2, NULL);
+    }
+    cJSON *root = cJSON_ParseWithOpts(argv[2], NULL, true);
     if (!root)
         return emit_error("invalid json", 2, NULL);
     int rc = json_dispatch(root);

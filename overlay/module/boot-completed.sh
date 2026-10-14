@@ -38,7 +38,11 @@ fi
 
 if [ -n "$version" ] && [ "$SUSFS_DECIMAL_MAIN" -ge 1 ] && [ "$SUSFS_DECIMAL_SUB" -ge 5 ] && [ "$SUSFS_DECIMAL_PATCH" -ge 7 ] 2>/dev/null; then
 	if [ $hide_sus_mnts_for_all_or_non_su_procs -lt 1 ]; then
-		${SUSFS_BIN} hide_sus_mnts_for_all_procs 0 && echo "[hide_sus_mnts_for_all_procs = 0]: susfs4ksu/boot-completed" >> $logfile1
+		if [ "$SUSFS_DECIMAL_MAIN" -ge 2 ]; then
+			${SUSFS_BIN} hide_sus_mnts_for_non_su_procs 0 && echo "[hide_sus_mnts_for_non_su_procs = 0]: susfs4ksu/boot-completed" >> $logfile1
+		else
+			${SUSFS_BIN} hide_sus_mnts_for_all_procs 0 && echo "[hide_sus_mnts_for_all_procs = 0]: susfs4ksu/boot-completed" >> $logfile1
+		fi
 	fi
 fi
 
@@ -212,7 +216,7 @@ fi
 		if [ -n "$version" ] && [ "$SUSFS_DECIMAL_MAIN" -ge 1 ] && [ "$SUSFS_DECIMAL_SUB" -ge 5 ] && [ "$SUSFS_DECIMAL_PATCH" -ge 4 ] || [ "$SUSFS_DECIMAL_MAIN" -ge 2 ] 2>/dev/null; then
 		${SUSFS_BIN} set_cmdline_or_bootconfig $mntfolder/cmdline
 		else
-			${SUSFS_BIN} set_proc_cmdline $mntfolder/cmdline
+			${SUSFS_BIN} set_bootconfig $mntfolder/cmdline
 		fi
 	fi
 
@@ -220,7 +224,7 @@ fi
 		if [ -n "$version" ] && [ "$SUSFS_DECIMAL_MAIN" -ge 1 ] && [ "$SUSFS_DECIMAL_SUB" -ge 5 ] && [ "$SUSFS_DECIMAL_PATCH" -ge 4 ] || [ "$SUSFS_DECIMAL_MAIN" -ge 2 ] 2>/dev/null; then
 		${SUSFS_BIN} set_cmdline_or_bootconfig $mntfolder/bootconfig
 		else
-			${SUSFS_BIN} set_proc_cmdline $mntfolder/bootconfig
+			${SUSFS_BIN} set_bootconfig $mntfolder/bootconfig
 		fi
 	fi
 	

@@ -7,23 +7,24 @@ SUSFS4LKM 是一个 KernelSU 模块：它在设备上加载 SUSFS 的可加载�
 ## 模块功能
 
 - **LKM 后端**：以 `.ko` 动态加载 SUSFS，不需要替换内核或刷入镜像
-- **native 兼容**：内核自带 native SUSFS 2.0 ~ 2.3 时直接复用，不叠加加载 LKM
+- **后端优先级**：先探测内核已有后端（native 或已加载的 LKM），探测到就直接复用；只有确认“无后端”时才加载 LKM，避免二次加载
 - **8 个 GKI KMI 变体**：android12-5.10 / android13-5.10 / android13-5.15 / android14-5.15 / android14-6.1 / android15-6.6 / android16-6.12 / android17-6.18，模块按内核版本自动选择
 - **统一 JSON 控制入口**：`susfsctl --json '<单个 JSON 参数>'`，请求结构 `{operation, target, values}`，响应 `{ok, code, backend, version, capabilities, data, error}`，参数严格 POSIX 引用，helper 只操作白名单接口
 - **固定退出码**：`0` 成功 / `2` 参数错误 / `3` 无后端 / `4` 版本或布局不支持 / `5` 权限错误 / `6` 协议错误 / `7` 内核业务失败，失败时 stdout 为空、诊断在 stderr
-- **WebUI**：状态页显示集成模块版本与后端版本；仅 LKM 后端启用高级页（path / kstat / redirect 的删除清空、full-clone、模块名与挂载前缀列表、日志与 AVC、只读诊断）
+- **接口边界（实测）**：JSON 路径必须是以 `/` 开头的无空白字符串（含空格/换行/反斜杠会被判 `2`），拒绝 `..` 穿越与内嵌 NUL，单次请求受系统单个参数长度上限（约 128 KiB）限制，重复 key 按第一个取值
+- **WebUI**：状态页显示集成模块版本与后端版本；高级页在后端不是 LKM 时会置灰入口并在页面内禁用全部控件（path / kstat / redirect 的删除清空、full-clone、模块名与挂载前缀列表、日志与 AVC、只读诊断）
 - **保存与立即应用分离**：保存启动配置不会立刻改动运行态，立即应用不会写回配置
 - **默认策略**：后端确认 ready 后才执行原模块默认策略与属性调整，单项失败独立记录，核心失败停止后续操作
 - **远程更新**：模块内置 `updateJson` 指向本仓库 `update.json`，之后发布新版本可直接从仓库拉取
 - **可停用可回滚**：`disable` 文件 + 重启即可停用；配置与状态都在独立目录
-- **不干扰其他模块**：不修改 KernelSU、启动镜像与其他模块；检测到外部规则模块或独立 LKM 时只报告冲突
+- **不干扰其他模块**：不修改 KernelSU、启动镜像与其他模块；不自动停用、卸载或覆盖其他模块，也不会重复加载或卸载已存在的 SUSFS LKM（外部模块自己管理的规则不属于本模块职责）
 
 ## 支持范围
 
 | KMI 变体 | 内核模块来源 | 验证状态 |
 | --- | --- | --- |
 | android14-6.1 | 本仓库源码构建（含 6.1 专用补丁） | 已在 OPD2404 / kernel 6.1.141-android14-11 真机验收 |
-| android12-5.10 / android13-5.10 / android13-5.15 / android14-5.15 / android15-6.6 / android16-6.12 / android17-6.18 | 上游 `inforcqb/susfs4ksu-lkm` release `v2.3.0-r18.1`（SHA256 校验） | 仅哈希与包结构校验，未在对应设备启动验证 |
+| android12-5.10 / android13-5.10 / android13-5.15 / android14-5.15 / android15-6.6 / android16-6.12 / android17-6.18 | 本仓库源码构建（锁定 commit `85ef920c` + 每个变体固定 DDK 镜像 digest） | 仅构建、ELF/vermagic 与包结构校验，未在对应设备启动验证 |
 
 > 下表以外的设备（非 GKI、预 5.10 内核、其他架构）不在本项目支持范围。相同 KMI 不等于相同内核 ABI，若加载失败请停用模块。
 

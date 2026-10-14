@@ -6,20 +6,27 @@
 
 $ErrorActionPreference = "Stop"
 $Root = (Resolve-Path (Join-Path $PSScriptRoot "..")).Path
-$BuildRoot = "D:\CodexBuild\susfs4ksu-unified"
+$BuildRoot = if ($env:SUSFS_BUILD_ROOT) { $env:SUSFS_BUILD_ROOT } else { "D:\CodexBuild\susfs4ksu-unified" }
 $Dist = Join-Path $BuildRoot "dist"
 $WebStage = Join-Path $BuildRoot "webui"
 $KoDir = Join-Path $BuildRoot "ko"
 $VariantList = Join-Path $Root "tools\variants.txt"
-$Wsl = "D:\WSL\WSL\wsl.exe"
-$WslRoot = "/mnt/c/Users/Admin（无密码）/Documents/ChatGPT/9989/SUSFS4LKM"
-$WslBuild = "/mnt/d/CodexBuild/susfs4ksu-unified"
-$SourceBuilt = @("android14-6.1")
+$Wsl = if ($env:SUSFS_WSL) { $env:SUSFS_WSL } else { "D:\WSL\WSL\wsl.exe" }
+$WslRoot = if ($env:SUSFS_WSL_ROOT) { $env:SUSFS_WSL_ROOT } else { "/mnt/c/Users/Admin（无密码）/Documents/ChatGPT/9989/SUSFS4LKM" }
+$WslBuild = if ($env:SUSFS_WSL_BUILD) { $env:SUSFS_WSL_BUILD } else { "/mnt/d/CodexBuild/susfs4ksu-unified" }
 $DdkDigests = @{
+    "android12-5.10" = "sha256:272ada1e61c525116032246df2a790d1ccec1804b7a9e0b09203c5e650dcb78e"
+    "android13-5.10" = "sha256:e5ce038ba38408ad26aae1f2622cfb44dfbf6634b025bf197aa08beac0794f5b"
+    "android13-5.15" = "sha256:9e68cd9fcab748584755d31ba88ef134efc938dbde17f258c2652315f6cd81cd"
+    "android14-5.15" = "sha256:bbf697a8fe995704268eef710921c9d2ea4f146954690d7ea97887f3a4014a6a"
     "android14-6.1" = "sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3"
+    "android15-6.6" = "sha256:51159bc935c75a282fc65bc87e02f16bd098d1cdf55dc558c4fdd0fcf7a132e2"
+    "android16-6.12" = "sha256:fd3ec5cc71d7f2716212e9df8d5674a9afe68fb769282fcac87b83f207f949ee"
+    "android17-6.18" = "sha256:fb8b66200bf402cf65a751060fc1aa29524b9fa8840feef16c7b196a4f3f0e6e"
 }
-$Clang = "C:\Users\Admin（无密码）\AppData\Local\Android\Sdk\ndk\29.0.14206865\toolchains\llvm\prebuilt\windows-x86_64\bin\clang.exe"
-$Python = "C:\Users\Admin（无密码）\AppData\Local\Programs\Python\Python312\python.exe"
+$Clang = if ($env:SUSFS_CLANG) { $env:SUSFS_CLANG } else { "C:\Users\Admin（无密码）\AppData\Local\Android\Sdk\ndk\29.0.14206865\toolchains\llvm\prebuilt\windows-x86_64\bin\clang.exe" }
+$Python = if ($env:SUSFS_PYTHON) { $env:SUSFS_PYTHON } else { "C:\Users\Admin（无密码）\AppData\Local\Programs\Python\Python312\python.exe" }
+$SourceBuilt = @(Get-Content -LiteralPath (Join-Path $Root "tools\variants.txt") | Where-Object { $_.Trim() })
 
 New-Item -ItemType Directory -Force -Path $BuildRoot,$Dist | Out-Null
 

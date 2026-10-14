@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tree_sha256": "917b64bc84266ffc42ea25780317bd0e2dc9d260a5b97d351025b7efe59db59c",
+  "tree_sha256": "da96db156ff7b6d94b26fab73db70f1e0abee36bfbc9cf425c502f9c396e07b1",
   "categories": {
     "sources": {
       "files": 230,
@@ -8,25 +8,25 @@
     },
     "overlay": {
       "files": 24,
-      "sha256": "dd9154aa32fdf645dcbfe03fe15a2118595204464d98f2cfe19a12e9bdf60f59"
+      "sha256": "126bbb4468fa613b5995c6d9dc684dfe957fccb533153479a74d6dae263ad39c"
     },
     "src": {
       "files": 1,
-      "sha256": "ce914b255ff1f5be4df51bdf87abbb6e7c9a1c5049a14793bef723ce52e13adc"
+      "sha256": "ef9b443acccf80bacb1e31f3c5ed92d81bff15ffc66b2e61494f1bf59df3b823"
     },
     "tools": {
-      "files": 11,
-      "sha256": "e8673d63b1ce3be9652b283f93e558c14679081ebf6890defb84458b7fa5fac9"
+      "files": 12,
+      "sha256": "9f2ac00798331fe62061d72b5443f155f73f83edd26ed364739464d295b8a09f"
     },
     "tests": {
       "files": 11,
-      "sha256": "af730da48884f9dd7cdb57cdd3c1a361da2d928c87c56b7904c45cfe2d005568"
+      "sha256": "f4a48e6f88195e761d02b5ad4cb05dfd469b381532d6f242e26d44a18366ddfd"
     }
   },
   "files": [
     {
       "path": "manifest.yaml",
-      "sha256": "2c890ff9c74a9ea834aa1384df008c9c92c006deadda707cf9e54d4e4b139cd1"
+      "sha256": "564a9d4fe7bc12f12407a7b73640ef87b7346f0e6c0b23acd50d730adcecd2c6"
     },
     {
       "path": "overlay/module/action.sh",
@@ -38,7 +38,7 @@
     },
     {
       "path": "overlay/module/boot-completed.sh",
-      "sha256": "a7509891cfec9f74e41977d6a9925885ba75c31df08db18df9692cfcc0fd07ba"
+      "sha256": "af01bd77857ee94de29956a10c64af0a3354f28233b8afa86e9b44f209145c9b"
     },
     {
       "path": "overlay/module/config.sh",
@@ -58,7 +58,7 @@
     },
     {
       "path": "overlay/module/module.prop",
-      "sha256": "16565a440d7bfccd19b40260b7aabd0a7b9ec713b07cd51397b6176177f1cc8f"
+      "sha256": "286df6da5c6800a843323ac8a1a52f5322b89fd76f472c72a98d09f48f2ed8a1"
     },
     {
       "path": "overlay/module/post-fs-data.sh",
@@ -70,7 +70,7 @@
     },
     {
       "path": "overlay/module/service.sh",
-      "sha256": "63ff84ff36d2d6b723a4e5d9bb225c6294b61f4ad55d18faca30000466ba949c"
+      "sha256": "6424c2a6729401f5ec98c529cd2f325bfda092af304b225fa2c2f3546b598f77"
     },
     {
       "path": "overlay/module/susfs_reset.sh",
@@ -90,11 +90,11 @@
     },
     {
       "path": "overlay/webui/advanced.js",
-      "sha256": "d82483c14373adadea4edae684b9c3b6cd5ca63a58622e42b2683d0caed84580"
+      "sha256": "b70b3d3e39d4772ec790e00c63545f979c9752bd8b16bcd02e979f34627ec5b6"
     },
     {
       "path": "overlay/webui/custom.html",
-      "sha256": "4fa4c40436f208dc9ca7ef29d58e402d2c39f247d5e58d76d40cea7f47b59bf9"
+      "sha256": "208404f25eb902121ed28377ab41bf8945721365736d4b07eabdf1c628de6d07"
     },
     {
       "path": "overlay/webui/index.js",
@@ -106,7 +106,7 @@
     },
     {
       "path": "overlay/webui/src/features/custom/feature-editor.js",
-      "sha256": "11446758bb66379e3ba747de4d3922843106a3a3ba515654539e60f7bb2d9df3"
+      "sha256": "6993e8c48266471aa87a9f066f7edb3aa71d7dd66bbe87b34ecfb91d0d0a067d"
     },
     {
       "path": "overlay/webui/src/features/home/export-logs.js",
@@ -1046,7 +1046,7 @@
     },
     {
       "path": "src/susfsctl/main.c",
-      "sha256": "50328568c26c60039b4fdfe01ab60b8570ab7438ffe8a5010d8876508b975ec9"
+      "sha256": "f3b22a7017c47a1bd97e5d7d4bcf33e85fadd400e9cb3b0bfcfa97d7d21ccc0e"
     },
     {
       "path": "tests/check-ko.py",
@@ -1090,7 +1090,7 @@
     },
     {
       "path": "tests/verify.ps1",
-      "sha256": "774d9f901ca0c957e8d1a64b3106d55e2a55d999c34d1abc9960480626df06c6"
+      "sha256": "cd00cd600c5c4e660ea1b8fb427f813dd66ef2dd685dd1a1825c8db7ffc3c4e1"
     },
     {
       "path": "tools/ROLLBACK.sh",
@@ -1102,7 +1102,7 @@
     },
     {
       "path": "tools/build.ps1",
-      "sha256": "9353d446fc839880fe9c8b53ecfbf17c112f3890fab4429783571ad93dbaca9d"
+      "sha256": "beeb9fe77bfb0eb0359e10be6990ba80461df37258e08285ca2e91856608bb27"
     },
     {
       "path": "tools/check-version.py",
@@ -1123,6 +1123,10 @@
     {
       "path": "tools/patch-lkm.py",
       "sha256": "c2189e26862a1f80ce9993148dc0c60a4972f87efecbc32e346af6fa6b0b4b23"
+    },
+    {
+      "path": "tools/release-body.py",
+      "sha256": "1f87ae0e99e2deb1ce0103c4d48751436d66ccb100ecb42f41128eb1a97ed6a7"
     },
     {
       "path": "tools/setup-wsl.ps1",

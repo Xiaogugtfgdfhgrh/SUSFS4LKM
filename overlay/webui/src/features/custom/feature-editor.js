@@ -1,6 +1,6 @@
 import { toast } from 'kernelsu';
 import { gsap } from 'gsap';
-import { run, ctl, versionAtLeast } from '../../utils.js';
+import { run, ctl, versionAtLeast, posixQuote } from '../../utils.js';
 import { config } from '../../core/constants.js';
 
 export function getCustomEditorFeatures(susfs_features, susfs_versions) {
@@ -129,7 +129,7 @@ export async function custom_feature_editor(susfs_features, susfs_versions) {
 		};
 
 		editBtn.onclick = async () => {
-			await run(`am start -a android.intent.action.VIEW -t text/plain -d file://${selected.filePath}`);
+			await run(`am start -a android.intent.action.VIEW -t text/plain -d ${posixQuote(`file://${selected.filePath}`)}`);
 		};
 	};
 
