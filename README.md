@@ -137,6 +137,8 @@ powershell -File tools/build.ps1
 
 Linux / CI 使用同一批脚本：`tools/fetch-sources.py` → `tools/source_lock.py` → `tools/build-lkm.sh` → `tools/fetch-ko.py` → `tools/package.py`，完整顺序见 `.github/workflows/release.yml`。
 
+CI 发布的 ZIP 就是这套流程的产物，与本机 Windows 构建的 ZIP 对比：91 个成员名称、顺序与内容一致，只有宿主编译的两个 helper（`bin/susfsctl`、`bin/susfs_insmod`）因宿主 clang 工具链不同而字节不同；8 个内核模块与 WebUI 产物逐字节一致。发布包以 CI 产物为准。
+
 注意：上游源码不随仓库提交，由 `tools/fetch-sources.py` 按 `manifest.yaml` 中固定的 commit 抓取，并逐个文件核对 `SOURCE_LOCK.json` 里的 SHA256；**任何改动 `overlay/`、`src/`、`tools/`、`tests/` 或 `manifest.yaml` 之后都必须重新生成锁文件**：
 
 ```sh
