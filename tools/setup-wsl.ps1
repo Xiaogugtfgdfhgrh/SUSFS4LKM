@@ -1,4 +1,4 @@
-﻿$ErrorActionPreference = "Stop"
+$ErrorActionPreference = "Stop"
 $Wsl = "D:\WSL\WSL\wsl.exe"
 $Distro = "Ubuntu"
 $Location = "D:\WSL\Ubuntu-susfs"

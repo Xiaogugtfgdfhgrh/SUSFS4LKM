@@ -85,7 +85,8 @@ def normalize_text(path):
 def make_zip(stage, output):
     output.parent.mkdir(parents=True, exist_ok=True)
     with zipfile.ZipFile(output, "w", compression=zipfile.ZIP_DEFLATED, compresslevel=9) as zf:
-        for path in sorted(Path(stage).rglob("*")):
+        members = [path for path in Path(stage).rglob("*") if path.is_file()]
+        for path in sorted(members, key=lambda item: item.relative_to(stage).as_posix().casefold()):
             if not path.is_file():
                 continue
             rel = path.relative_to(stage).as_posix()
@@ -132,7 +133,15 @@ def main():
         lkm_hashes[variant] = digest(source)
     (stage / "kmis").write_text("\n".join(variants) + "\n", encoding="utf-8", newline="\n")
     source_meta_path = Path(args.ko_dir) / "ko-sources.json"
-    lkm_sources = json.loads(source_meta_path.read_text(encoding="utf-8")) if source_meta_path.exists() else {}
+    if not source_meta_path.is_file():
+        raise RuntimeError(f"missing ko provenance: {source_meta_path}")
+    lkm_sources = json.loads(source_meta_path.read_text(encoding="utf-8"))
+    if set(lkm_sources) != set(variants):
+        raise RuntimeError("ko provenance does not match the variant list")
+    ddk_images = {}
+    for path in sorted((Path(args.ko_dir)).glob("ddk-*.json")):
+        image = json.loads(path.read_text(encoding="utf-8"))
+        ddk_images[image["variant"]] = {"image": image["image"], "digest": image["digest"]}
     shutil.copy2(build_root / "susfsctl", bin_dir / "susfsctl")
     shutil.copy2(build_root / "susfs_insmod", bin_dir / "susfs_insmod")
     set_mode(bin_dir / "susfsctl", True)
@@ -168,6 +177,7 @@ def main():
             "susfs_insmod_sha256": digest(build_root / "susfs_insmod"),
             "lkm_sha256": lkm_hashes,
             "lkm_sources": lkm_sources,
+            "ddk_images": ddk_images,
             "lkm_patch_sha256": digest(root / "tools" / "patch-lkm.py"),
             "lkm_build_script_sha256": digest(root / "tools" / "build-lkm.sh"),
         },

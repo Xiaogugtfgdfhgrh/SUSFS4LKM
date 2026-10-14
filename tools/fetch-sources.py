@@ -2,6 +2,7 @@
 import hashlib
 import io
 import json
+import re
 import sys
 import tarfile
 import urllib.request
@@ -35,9 +36,16 @@ def load_lock(root):
 
 def manifest_matches(root):
     text = (root / "manifest.yaml").read_text(encoding="utf-8")
-    missing = [sha for _, sha in GROUPS.values() if sha not in text]
+    missing = []
+    for group, (repo, sha) in GROUPS.items():
+        repo_field = "ksu_susfs_repo" if group == "ksu_susfs" else f"{group}_repo"
+        commit_field = "ksu_susfs_commit" if group == "ksu_susfs" else f"{group}_commit"
+        if not re.search(rf"^\s*{repo_field}:\s*{re.escape(repo)}\s*$", text, re.M):
+            missing.append(f"{repo_field}={repo}")
+        if not re.search(rf"^\s*{commit_field}:\s*{sha}\s*$", text, re.M):
+            missing.append(f"{commit_field}={sha}")
     if missing:
-        raise SystemExit("manifest.yaml does not pin: " + ", ".join(missing))
+        raise SystemExit("manifest.yaml mismatch: " + ", ".join(missing))
 
 
 def download(repo, sha):

@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tree_sha256": "a4f3ac5878f942b9d1c446488a700f7ddb6931d3054d1993824ff66ccd0d084b",
+  "tree_sha256": "852cabf262508ba3e84971294e0d74e87c7c0a585cf3f9ed6c810e7e981278be",
   "categories": {
     "sources": {
       "files": 230,
@@ -16,11 +16,11 @@
     },
     "tools": {
       "files": 11,
-      "sha256": "42545f20f70f1eb2f34a15b4f69329da98902c45a981ce157e606e46ee68ebf1"
+      "sha256": "93512b146a8822c5e32221991c2646df9622f685456647eafadff46bc5847180"
     },
     "tests": {
-      "files": 9,
-      "sha256": "b2d240bc381cc10c96db1be3fbba172d391fd127535d80b96f6d6064dce60154"
+      "files": 10,
+      "sha256": "794952a23961d351018548596eca5933eb4c4f2742eac299edbe0820ee997145"
     }
   },
   "files": [
@@ -1049,6 +1049,10 @@
       "sha256": "6e3785516e62d685a0c1eb715e83d2c2f812d24bdff4d82fc33ec516fad770df"
     },
     {
+      "path": "tests/check-ko.py",
+      "sha256": "b47f0f1a8203120d5f0d24e5b74e9456d51fccfa09f052677b3ad5d3587f8daa"
+    },
+    {
       "path": "tests/check-zip.py",
       "sha256": "5946b6c6f320f3d34425c29efae5501184489d575ccecee3c5abd39b7866069e"
     },
@@ -1082,7 +1086,7 @@
     },
     {
       "path": "tests/verify.ps1",
-      "sha256": "cda756db61796bdfc457565850849b3d9f63727514478bfab908db9b604b1388"
+      "sha256": "774d9f901ca0c957e8d1a64b3106d55e2a55d999c34d1abc9960480626df06c6"
     },
     {
       "path": "tools/ROLLBACK.sh",
@@ -1090,27 +1094,27 @@
     },
     {
       "path": "tools/build-lkm.sh",
-      "sha256": "80593148e5bfc3a5eb5ba379f832226463dec3c80f982d07b4c35c82972c4639"
+      "sha256": "e33b1a8dc2bab2920fa56152f241570066a70d512f541f0dd5a9dd67c6e40723"
     },
     {
       "path": "tools/build.ps1",
-      "sha256": "9e82d7505c957463d83eaa90b0ad343db70b784aa73bc3a89c22c6092342fded"
+      "sha256": "9353d446fc839880fe9c8b53ecfbf17c112f3890fab4429783571ad93dbaca9d"
     },
     {
       "path": "tools/check-version.py",
-      "sha256": "f0380a74921074b56865f4a3b81497027260d2e39c3b93a0def77c9f1701785f"
+      "sha256": "6b489af6642b273d9cbdf1d7e0252eceb3bba07a90479ed96e253a6b756a3f49"
     },
     {
       "path": "tools/fetch-ko.py",
-      "sha256": "c627a59fd81282a8714974617db9991dafbacdf7d2470e8747397517c90785e8"
+      "sha256": "ffb3d7f6e3f59205f9678922d15270f9c9b2e960829d5b488c7034feca1c223b"
     },
     {
       "path": "tools/fetch-sources.py",
-      "sha256": "0c68d14fd32ba0467b64cf70fa148269173eb8f1d3a481b6c614e459cde4c8c9"
+      "sha256": "2e54d57e74b29ef308d19a6bbe8a805beb3b4405f7e2754b9eaf3bdb590064ac"
     },
     {
       "path": "tools/package.py",
-      "sha256": "fbbca4dc5b58dcceba4f54a2a41bd57f0fc38a44ea75136a167c7aa75831a596"
+      "sha256": "e497a33470ef40f1e43d5fa1c8bf36236be595ff573644d3d8521e0635bd30db"
     },
     {
       "path": "tools/patch-lkm.py",
@@ -1118,7 +1122,7 @@
     },
     {
       "path": "tools/setup-wsl.ps1",
-      "sha256": "8ce4a5238db24ca32b0fb65cfb7f8440072da29f00709bcc34eb36f0eb96d03e"
+      "sha256": "b2e28d951c867c7669a4eb21acef828edafbb6658f5304df5eef34909d39c0eb"
     },
     {
       "path": "tools/source_lock.py",

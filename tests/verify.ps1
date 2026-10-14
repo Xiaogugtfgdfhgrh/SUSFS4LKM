@@ -55,6 +55,8 @@ if ($LASTEXITCODE -ne 0) { throw "susfs_insmod build failed" }
 
 if (-not (Test-Path -LiteralPath $VariantList)) { throw "variant list missing: $VariantList" }
 $variants = Get-Content -LiteralPath $VariantList | Where-Object { $_.Trim() }
+& $Python -B (Join-Path $Root "tests\check-ko.py") $VariantList $KoDir
+if ($LASTEXITCODE -ne 0) { throw "ko check failed" }
 $koSourcesPath = Join-Path $KoDir "ko-sources.json"
 $koSources = if (Test-Path -LiteralPath $koSourcesPath) { Get-Content -LiteralPath $koSourcesPath -Raw | ConvertFrom-Json } else { @{} }
 foreach ($variant in $variants) {

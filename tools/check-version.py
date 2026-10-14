@@ -17,10 +17,11 @@ def prop(root, name):
 
 def main():
     root = Path(sys.argv[1]).resolve() if len(sys.argv) > 1 else Path.cwd()
-    tag = sys.argv[2] if len(sys.argv) > 2 else None
+    tag = sys.argv[2] if len(sys.argv) > 2 and sys.argv[2] not in {"", "-"} else None
     version = prop(root, "version")
     code = int(prop(root, "versionCode"))
     update = json.loads((root / "update.json").read_text(encoding="utf-8"))
+    manifest = (root / "manifest.yaml").read_text(encoding="utf-8")
 
     problems = []
     if update.get("version") != version:
@@ -29,8 +30,14 @@ def main():
         problems.append("update.json versionCode")
     if update.get("zipUrl") != f"{REPO}/releases/latest/download/SUSFS4LKM-arm64.zip":
         problems.append("update.json zipUrl")
+    if update.get("changelog") != f"{REPO}/releases/latest":
+        problems.append("update.json changelog")
     if prop(root, "updateJson") != f"{REPO.replace('github.com', 'raw.githubusercontent.com')}/main/update.json":
         problems.append("module.prop updateJson")
+    if f"version: {version}\n" not in manifest:
+        problems.append("manifest version")
+    if f"versionCode: {code}\n" not in manifest:
+        problems.append("manifest versionCode")
     if tag is not None and tag != version:
         problems.append(f"tag {tag}")
 

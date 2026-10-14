@@ -15,6 +15,9 @@ $Wsl = "D:\WSL\WSL\wsl.exe"
 $WslRoot = "/mnt/c/Users/Admin（无密码）/Documents/ChatGPT/9989/SUSFS4LKM"
 $WslBuild = "/mnt/d/CodexBuild/susfs4ksu-unified"
 $SourceBuilt = @("android14-6.1")
+$DdkDigests = @{
+    "android14-6.1" = "sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3"
+}
 $Clang = "C:\Users\Admin（无密码）\AppData\Local\Android\Sdk\ndk\29.0.14206865\toolchains\llvm\prebuilt\windows-x86_64\bin\clang.exe"
 $Python = "C:\Users\Admin（无密码）\AppData\Local\Programs\Python\Python312\python.exe"
 
@@ -82,7 +85,8 @@ if (-not $SkipWeb) {
 
 if (-not $SkipLkm) {
     foreach ($variant in $SourceBuilt) {
-        & $Wsl -d Ubuntu sh -c "cd '$WslRoot' && SUSFS_BUILD_ROOT='$WslBuild' sh tools/build-lkm.sh '$WslRoot' '$WslBuild' '$variant'"
+        $digest = $DdkDigests[$variant]
+        & $Wsl -d Ubuntu sh -c "cd '$WslRoot' && SUSFS_BUILD_ROOT='$WslBuild' SUSFS_DDK_DIGEST='$digest' sh tools/build-lkm.sh '$WslRoot' '$WslBuild' '$variant'"
         if ($LASTEXITCODE -ne 0) { throw "lkm build failed: $variant" }
     }
     $koArgs = @()

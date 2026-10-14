@@ -63,6 +63,16 @@ def main():
         expected = ASSETS.get(variant)
         if expected is None:
             raise SystemExit(f"no pinned upstream ko for {variant}")
+        local = out / f"susfs_guard_lkm-{variant}.ko"
+        if local.is_file() and digest(local.read_bytes()) == expected:
+            meta[variant] = {
+                "commit": COMMIT,
+                "release": TAG,
+                "sha256": expected.upper(),
+                "source": "upstream-release",
+            }
+            print(f"{variant}: {expected} (cached)")
+            continue
         name, payload = download(variant)
         actual = digest(payload)
         if actual != expected:
@@ -86,6 +96,9 @@ def main():
             "source": "current-source",
         }
         print(f"{variant}: {meta[variant]['sha256']} (current-source)")
+
+    for variant in sorted(set(meta) - set(variants)):
+        del meta[variant]
 
     meta_path.write_text(json.dumps(meta, ensure_ascii=False, indent=2, sort_keys=True) + "\n", encoding="utf-8", newline="\n")
 
