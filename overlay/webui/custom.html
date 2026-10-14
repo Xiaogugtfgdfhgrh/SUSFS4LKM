@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Document</title>
+	<link href="./index.css" type="text/css" rel="stylesheet">
+	<script type="module" src="index.js"></script>
+    <script type="module" src="i18n.js"></script>
+</head>
+
+<style>
+	div,p{
+		z-index: 40;	
+	}
+</style>
+
+<body class="bg-black font-amongus2" data-router-wrapper>
+
+	<main class="max-h-screen relative overflow-auto" data-router-view="custom">
+        <dialog id="kstat_edit_modal" class="modal font-sans font-normal">
+            <div class="modal-box bg-black border-2 border-white w-11/12 max-w-2xl">
+                <h3 class="font-bold text-xl text-white mb-4 font-amongus2 uppercase hidden" id="edit_kstat_entry_label_id" data-i18n="edit_kstat_entry_label">Edit SUS_KSTAT Entry</h3>
+                <h3 class="font-bold text-xl text-white mb-4 font-amongus2 uppercase hidden" id="add_kstat_entry_label_id" data-i18n="add_kstat_entry_label">Add SUS_KSTAT Entry</h3>
+                <div class="space-y-4">
+                    <div class="form-control">
+                        <label class="label">
+                            <span class="text-white text-sm font-bold" data-i18n="kstat_path_label">Path</span>
+                        </label>
+                        <input type="text" id="kstat_path_input" class="input input-bordered bg-black border-white text-white" placeholder="/system/..." />
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">inode</span>
+                            </label>
+                            <input type="text" id="kstat_ino_input" class="input input-bordered bg-black border-white text-white" placeholder="1234" />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">device</span>
+                            </label>
+                            <input type="text" id="kstat_dev_input" class="input input-bordered bg-black border-white text-white" placeholder="1234" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">nlink</span>
+                            </label>
+                            <input type="text" id="kstat_nlink_input" class="input input-bordered bg-black border-white text-white" placeholder="2" />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">size</span>
+                            </label>
+                            <input type="text" id="kstat_size_input" class="input input-bordered bg-black border-white text-white" placeholder="223344" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">atime</span>
+                            </label>
+                            <input type="text" id="kstat_atime_input" class="input input-bordered bg-black border-white text-white" placeholder="1712592355" />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">mtime</span>
+                            </label>
+                            <input type="text" id="kstat_mtime_input" class="input input-bordered bg-black border-white text-white" placeholder="1712592355" />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">ctime</span>
+                            </label>
+                            <input type="text" id="kstat_ctime_input" class="input input-bordered bg-black border-white text-white" placeholder="1712592355" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">atime_nsec</span>
+                            </label>
+                            <input type="text" id="kstat_atime_nsec_input" class="input input-bordered bg-black border-white text-white" placeholder="0" />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">mtime_nsec</span>
+                            </label>
+                            <input type="text" id="kstat_mtime_nsec_input" class="input input-bordered bg-black border-white text-white" placeholder="0" />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">ctime_nsec</span>
+                            </label>
+                            <input type="text" id="kstat_ctime_nsec_input" class="input input-bordered bg-black border-white text-white" placeholder="0" />
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">blocks</span>
+                            </label>
+                            <input type="text" id="kstat_blocks_input" class="input input-bordered bg-black border-white text-white" placeholder="16" />
+                        </div>
+                        <div class="form-control">
+                            <label class="label">
+                                <span class="text-white text-sm font-bold">blksize</span>
+                            </label>
+                            <input type="text" id="kstat_blksize_input" class="input input-bordered bg-black border-white text-white" placeholder="512" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-action mt-6 font-amongus2">
+                    <button class="btn btn-outline border-white text-white" onclick="document.getElementById('kstat_edit_modal').close()" data-i18n="cancel_label">Cancel</button>
+                    <button class="btn btn-primary text-white" id="save_kstat_entry">Make it SuS</button>
+                </div>
+            </div>
+            <form method="dialog" class="modal-backdrop">
+                <button></button>
+            </form>
+        </dialog>
+        <dialog id="confirm_del_kstat_modal" class="modal modal-bottom sm:modal-middle">
+            <div class="modal-box">
+                <h3 class="font-bold text-base font-sans" data-i18n="warning_label">Warning!</h3>
+                <p class="py-4 font-sans" id="modal_kstat_del_message" data-i18n="del_path_label">Delete path:</p>
+                <div class="modal-action">
+                    <button class="btn btn-md btn-error font-sans" id="cancel_del_kstat" data-i18n="cancel_label">Cancel</button>
+                    <button class="btn btn-md btn-primary font-sans" id="confirm_del_kstat" data-i18n="confirm_label">Confirm</button>
+                </div>
+            </div>
+        </dialog>
+		<div class="pt-3 pb-14">
+			<div class="flex justify-between items-center mx-auto ml-4 pt-4 mr-4">
+				<div class="flex flex-col">
+					<div class="font-bold text-4xl text-white font-amongus2 uppercase" data-i18n="custom_settings_label">Custom Settings</div>
+				</div>
+                <div>
+					<button class="btn btn-md btn-outline h-auto text-sm border-white mt-2 text-white" data-i18n="help_label" onclick="ksu.exec(`am start -a android.intent.action.VIEW -d https://github.com/sidex15/susfs4ksu-module/wiki/SUSFS-Custom-Settings`)">Help</button>
+                    <a href="advanced.html" class="text-white"><button class="btn btn-md btn-outline h-auto text-sm border-white mt-2 text-white">LKM Advanced</button></a>
+                    <a href="index.html" class="text-white"><button class="btn btn-md btn-outline h-auto text-sm border-white mt-2 text-white" data-i18n="main_menu_label">main menu</button></a>
+				</div>
+			</div>
+			<section class="flex flex-col justify-start items-center min-h-fit ml-4 mr-4 uppercase font-bold">
+				<div class="stats flex flex-col divide-x-0 divide-y-0 white:bg-cyan-100/20 bg-cyan-100/20 dark:bg-black/20 mt-5 border-2 p-4 border-white backdrop-blur-[2.5px] min-w-full sm:min-w-[400px]">
+                    <div class="form-control">
+                    <label class="label cursor-pointer">
+                        <span class="text-white text-base" data-i18n="hide_gapps_label">Hide Gapps</span>
+                        <input type="checkbox" id="hide_gapps" class="toggle toggle-md toggle-secondary" checked="checked" />
+                    </label>
+                    </div>
+                    <div class="form-control">
+                    <label class="label cursor-pointer">
+                        <span class="text-white text-base" data-i18n="emulate_vold_app_data_label">Emulate Vold App Data Isolation</span>
+                        <input type="checkbox" id="emulate_vold_app_data" class="toggle toggle-md toggle-primary" checked="checked" />
+                    </label>
+                    <div id="emulate_vold_app_data_sus_path_loop_checkbox" class="form-control hidden">
+							<label class="label cursor-pointer">
+							<span class="text-white text-sm font-amongus2" data-i18n="emulate_vold_app_data_sus_path_loop_label">Use sus path loop</span>
+							<input type="checkbox" id="emulate_vold_app_data_sus_path_loop" class="checkbox checkbox-sm checkbox-primary" checked="checked"/>
+							</label>
+					</div>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                        <span class="text-white text-base font-amongus2" data-i18n="hide_revanced_label">Hide Revanced (YT/YTM)</span>
+                        <input type="checkbox" id="hide_revanced" class="toggle toggle-md toggle-accent" checked="checked" />
+                        </label>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                        <span class="text-white text-base" data-i18n="spoof_cmdline_label">Spoof CMDLINE</span>
+                        <input type="checkbox" id="spoof_cmdline" class="toggle toggle-md toggle-success" checked="checked" />
+                        </label>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                        <span class="text-white text-base" data-i18n="hide_ksu_loop_label">Hide KSU Loops</span>
+                        <input type="checkbox" id="hide_ksu_loop" class="toggle toggle-md toggle-warning" checked="checked" />
+                        </label>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                        <span class="text-white text-base" data-i18n="avc_log_spoofing_label">AVC Log Spoofing</span>
+                        <input type="checkbox" id="avc_log_spoofing" class="toggle toggle-md toggle-success" checked="checked" />
+                        </label>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                        <span class="text-white text-base" data-i18n="force_hide_dex2oat_label">Force Hide Dex2oat Mounts</span>
+                        <input type="checkbox" id="force_hide_lsposed" class="toggle toggle-md toggle-error" checked="checked" />
+                        </label>
+                    </div>
+				</div>
+                <div class="stats flex flex-col divide-x-0 divide-y-0 white:bg-cyan-100/20 bg-cyan-100/20 dark:bg-black/20 mt-5 border-2 p-4 border-white backdrop-blur-[2.5px] min-w-full sm:min-w-[400px]">
+                    <h2 class="text-white text-xl font-bold mb-3" data-i18n="hide_paths_label">Hide Custom Rom Settings</h2>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                            <span class="text-white text-base" data-i18n="hide_custom_rom_label">Hide Custom Rom Paths</span>
+                            <input type="checkbox" id="hide_custom_rom" class="toggle toggle-md toggle-primary" checked="checked" />
+                        </label>
+                    </div>
+                    <div id="custom_rom_levels" class="hidden pb-3">
+                        <label class="label cursor-pointer">
+                        <span class="text-white text-base" data-i18n="hide_level_label">Hide Level</span>
+                        </label>
+                        <input type="range" min="0" max="100" value="0" class="range range-xs" step="25" id="hide_level"/>
+                        <div class="flex w-full justify-between px-2 text-xs font-normal font-amongus text-white">
+                            <span>1</span>
+                            <span>2</span>
+                            <span>3</span>
+                            <span>4</span>
+                            <span>5</span>
+                        </div>
+                        <p class="text-white text-sm hidden font-amongus2 mt-2" data-i18n="hide_custom_rom_desc1" id="hide_level1">Exclude .apk, .jar, .odex, .vdex, .so, .rc, and /vendor/bin/hw/ files</p>
+                        <p class="text-white text-sm hidden font-amongus2 mt-2" data-i18n="hide_custom_rom_desc2" id="hide_level2">Exclude .apk, .jar, .odex, .vdex, .so, and /vendor/bin/hw/ files</p>
+                        <p class="text-white text-sm hidden font-amongus2 mt-2" data-i18n="hide_custom_rom_desc3" id="hide_level3">Exclude .apk, .jar, .odex, .vdex, and /vendor/bin/hw/ files</p>
+                        <p class="text-white text-sm hidden font-amongus2 mt-2" data-i18n="hide_custom_rom_desc4" id="hide_level4">Exclude .apk, .jar, and /vendor/bin/hw/ files</p>
+                        <p class="text-white text-sm hidden font-amongus2 mt-2" data-i18n="hide_custom_rom_desc5" id="hide_level5">Hide all custom rom paths (Risky and it could cause issues)</p>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                                <span class="text-white text-base" data-i18n="hide_vendor_sepolicy_label">Hide vendor sepolicy</span>
+                            <input type="checkbox" id="hide_vendor_sepolicy" class="toggle toggle-md toggle-primary" checked="checked" />
+                        </label>
+                    </div>
+                    <div class="form-control">
+                        <label class="label cursor-pointer">
+                                <span class="text-white text-base" data-i18n="hide_compat_matrix_label">Hide Compat Matrix</span>
+                            <input type="checkbox" id="hide_compat_matrix" class="toggle toggle-md toggle-primary" checked="checked" />
+                        </label>
+                    </div>
+                </div>
+                <div class="stats flex flex-col divide-x-0 divide-y-0 white:bg-cyan-100/20 bg-cyan-100/20 dark:bg-black/20 mt-5 border-2 p-4 border-white backdrop-blur-[2.5px] min-w-full sm:min-w-[400px]" id="custom_feature_editor_section">
+                    <div class="form-control min-w-full sm:min-w-[400px]">
+                        <label class="label cursor-pointer justify-between items-center flex">
+                            <span class="text-white text-base font-bold" data-i18n="custom_sus_feature_select_label">Custom SUSFS Feature</span>
+                            <select id="custom_feature_select" class="select select-bordered select-sm max-w-[220px] text-white bg-black border-white text-base font-bold uppercase">
+                            </select>
+                        </label>
+                    </div>
+                    <div class="form-control min-w-full sm:min-w-[400px]">
+                        <label class="label cursor-pointer justify-between items-center flex">
+                               <span class="text-white text-base" id="custom_feature_label" data-i18n="custom_sus_feature_editor_label">Custom Feature</span>
+                            <div class="flex flex-row gap-2">
+                                <button class="btn btn-md btn-outline w-auto mt-2 border-white text-white text-base font-normal" id="load_custom_feature" data-i18n="load_label">load</button>
+                                <button class="btn btn-md btn-outline w-auto mt-2 border-white text-white text-base font-normal" id="edit_custom_feature" data-i18n="edit_label">Edit with</button>
+                            </div>
+                        </label>
+                    </div>
+                    <div class="stat flex flex-col justify-center items-center p-0">
+                        <textarea class="textarea min-w-full font-sans h-48 leading-normal font-normal" placeholder="Press Load" id="custom_feature_textarea"></textarea>
+                        <button class="btn btn-md btn-outline w-24 mt-2 border-white text-white text-base font-normal" id="save_custom_feature">Make it SuS</button>
+                    </div>
+                </div>
+                <div class="stats flex flex-col divide-x-0 divide-y-0 white:bg-cyan-100/20 bg-cyan-100/20 dark:bg-black/20 mt-5 border-2 p-4 border-white backdrop-blur-[2.5px] min-w-full sm:min-w-[400px] max-w-full overflow-hidden" id="custom_kstat_section">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-white text-xl font-bold" data-i18n="custom_sus_kstat_label">Custom SUS_KSTAT</h2>
+                        <button class="btn btn-sm btn-outline border-white text-white" id="add_kstat_entry">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="kstat_entries_list" class="space-y-3 overflow-hidden w-full min-w-0">
+                    </div>
+                </div>
+			</section>
+		</div>
+	</main>
+    <script>
+		document.addEventListener('DOMContentLoaded', () => {
+		  window.i18n.init();
+		});
+	</script>
+</body>
+
+</html>

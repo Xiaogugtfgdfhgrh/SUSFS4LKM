@@ -1,0 +1,78 @@
+#!/bin/sh
+config="/data/adb/susfs4ksu_unified"
+
+legit_mounts="/system
+/system_ext
+/vendor
+/odm
+/product
+/system_dlkm
+/vendor_dlkm
+/odm_dlkm
+/apex
+/system/app
+/system/priv-app
+/system/lib
+/system/lib64
+/vendor/app
+/vendor/priv-app
+/vendor/lib
+/vendor/lib64
+/product/app
+/product/priv-app
+/product/lib
+/product/lib64
+/system_ext/app
+/system_ext/priv-app
+/system_ext/lib
+/system_ext/lib64
+/data
+/cache
+/metadata
+/persist
+/mnt
+/storage
+/debug_ramdisk
+/dev
+/proc
+/sys
+/sys/fs/cgroup
+/my_product
+/my_engineering
+/my_company
+/my_carrier
+/my_region
+/my_heytap
+/my_stock
+/my_preload
+/my_bigball
+/my_manifest
+"
+
+while IFS= read -r line; do
+    key=$(echo "$line" | cut -d'=' -f1)
+    if echo $key | grep -q -E 'hide_sus_mnts_for_all_or_non_su_procs|susfs_log'; then
+        sed -i "s/^$key=.*/$key=1/" "$config/config.sh"
+        continue
+    elif echo $key | grep -q -E 'kernel_version|kernel_build'; then
+        sed -i "s/^$key=.*/$key='default'/" "$config/config.sh"
+        continue
+    elif echo $key | grep -q -E 'sus_su|sus_su_active|vbmeta_size'; then
+        continue
+    fi
+    sed -i "s/^$key=.*/$key=0/" "$config/config.sh"
+done < "$config/config.sh"
+
+echo -e "# this contains suspicious paths you want \n# to be hidden at boot-completed.sh\n# format: <path> <check max tries (seconds)>\n# example\n# /system/addon.d # by default max tries is disabled\n# /vendor/bin/install-recovery.sh 1 # try to check only once\n# /system/bin/install-recovery.sh 15 # try to check for 15 seconds" > "$config/sus_path.txt"
+echo -e "# this contains suspicious paths you want \n# to be hidden at boot-completed.sh\n# format: <path> <check max tries (seconds)>\n# example\n# /system/addon.d # by default max tries is disabled\n# /vendor/bin/install-recovery.sh 1 # try to check only once\n# /system/bin/install-recovery.sh 15 # try to check for 15 seconds" > "$config/sus_path_loop.txt"
+echo -e "# this contains suspicious paths that are in the maps you want \n# to be hidden at boot-completed.sh\n# example\n# /system/font/Roboto-Regular.ttf\n# /system/font/Roboto-Bold.ttf\n# /vendor/lib/libsuspicious.so" > "$config/sus_maps.txt"
+echo -e "# this contains suspicious mounts you want \n# to be sus_mounted at post-mount.sh\n# example\n# /system\n# /system_ext\n# /data/adb/modules\n# /debug_ramdisk" > "$config/sus_mount.txt"
+echo -e "# this contains suspicious mounts you want \n# to be try_umounted at post-mount.sh\n# example\n# /system\n# /system_ext\n# /debug_ramdisk" > "$config/try_umount.txt"
+echo -e "# this contains paths you want to redirect with\n# open redirect at boot-completed.sh or service.sh\n# example format\n# 0 = Execute on boot-completed.sh\n# 1 = Execute on service.sh\n# <original_path> <redirected_path> <0 or 1>\n# /system/bin/service /data/adb/susfs4ksu_unified/service_redirected 0" > "$config/sus_open_redirect.txt"
+printf "$legit_mounts" > "$config/legit_mounts.txt"
+echo "[]" > "$config/sus_kstat_statically.json"
+
+rm -f /data/adb/susfs_no_auto_add_sus_ksu_default_mount
+rm -f /data/adb/susfs_no_auto_add_sus_bind_mount
+rm -f /data/adb/susfs_no_auto_add_try_umount_for_bind_mount
+rm -f /data/adb/susfs_umount_for_zygote_system_process

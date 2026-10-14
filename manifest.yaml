@@ -1,0 +1,46 @@
+schema: 1
+module:
+  id: susfs4ksu_unified
+  version: v0.1.0
+  versionCode: 100
+target:
+  arch: arm64
+  kmi: android14-6.1
+  kmi_generation: 11
+sources:
+  lkm_repo: inforcqb/susfs4ksu-lkm
+  lkm_commit: 85ef920ccf27682a2a9089b4676547f691b92828
+  module_repo: sidex15/susfs4ksu-module
+  module_commit: c6a1c065efff9eaead049acf529a10bc93d34e75
+  webui_repo: sidex15/susfs4ksu-module
+  webui_commit: b2d5e037b2370d5ae13a15eab0d7d1c29cbe80b0
+  ksu_susfs_repo: sidex15/susfs4ksu-binaries
+  ksu_susfs_commit: 895afae32602e11418e7665a625b9ce32f389bcb
+  cjson_repo: DaveGamble/cJSON
+  cjson_commit: c859b25da02955fef659d658b8f324b5cde87be3
+  cjson_blob_c: 6e4fb0dd369cd905923da515be87ab06db6c1ee0
+  cjson_blob_h: cab5feb427725f8e5c82287f7fe59481b609b9b5
+  cjson_blob_license: 78deb0406d713ab9730e3c2447be1abdbd70b9a2
+  cjson_c_sha256: 298581A04A36C0165DA4B0AADE235C23088CB2FAA58651D720EA2F3706ED0B0D
+  cjson_h_sha256: 25B0145150D500498E4D209CEC69C18C42CF818BFFCC54690BE3B895A2A16DEE
+  ksu_susfs_main_sha256: 95100C0E3588A51BB26898558622F417476095BADE61CDDB4BF0DB28745ADE33
+build:
+  ddk_image_template: ghcr.io/ylarod/ddk-min:<variant>-20260828
+  qualification_ddk_digest: sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3
+  source_built_variants:
+    - android14-6.1
+  non_qualification_variant_source: inforcqb/susfs4ksu-lkm v2.3.0-r18.1
+  non_qualification_release_url: https://github.com/inforcqb/susfs4ksu-lkm/releases/download/v2.3.0-r18.1
+  lkm_variants:
+    - android12-5.10
+    - android13-5.10
+    - android13-5.15
+    - android14-5.15
+    - android14-6.1
+    - android15-6.6
+    - android16-6.12
+    - android17-6.18
+  ndk_api: 21
+  lkm_extra_cflags: -mbranch-protection=standard
+  lkm_patch: tools/patch-lkm.py
+  lkm_patch_sha256: C2189E26862A1F80CE9993148DC0C60A4972F87EFECBC32E346AF6FA6B0B4B23

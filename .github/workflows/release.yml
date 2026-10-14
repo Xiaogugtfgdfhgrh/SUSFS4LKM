@@ -1,0 +1,70 @@
+name: release
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  SOURCE_VARIANT: android14-6.1
+  NDK_VERSION: 29.0.14206865
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: version metadata
+        run: python3 tools/check-version.py . "${GITHUB_REF_NAME}"
+      - name: fetch sources
+        run: python3 tools/fetch-sources.py .
+      - name: verify source lock
+        run: python3 tools/source_lock.py .
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: sources/webui/package-lock.json
+      - uses: android-actions/setup-android@v3
+      - name: install ndk
+        run: sdkmanager --install "ndk;$NDK_VERSION"
+      - name: build helper
+        run: |
+          CC="$ANDROID_HOME/ndk/$NDK_VERSION/toolchains/llvm/prebuilt/linux-x86_64/bin/clang"
+          mkdir -p build
+          "$CC" --target=aarch64-linux-android21 -std=gnu11 -O2 -Wall -Wextra -Wno-unused-parameter -I sources/cjson src/susfsctl/main.c sources/cjson/cJSON.c -o build/susfsctl
+          "$CC" --target=aarch64-linux-gnu -O2 -nostdlib -static-pie -fno-stack-protector -fno-builtin -fuse-ld=lld -Wl,-e,_start sources/lkm/tools/susfs_insmod.c -o build/susfs_insmod
+      - name: build webui
+        run: |
+          rm -rf build/webui
+          cp -a sources/webui build/webui
+          cp -a overlay/webui/. build/webui/
+          cd build/webui
+          npm ci
+          npm run build
+      - name: build lkm
+        run: |
+          mkdir -p build/ko
+          docker pull "ghcr.io/ylarod/ddk-min:$SOURCE_VARIANT-20260828"
+          SUSFS_BUILD_ROOT="$PWD/build" sh tools/build-lkm.sh "$PWD" "$PWD/build" "$SOURCE_VARIANT"
+      - name: fetch pinned ko
+        run: python3 tools/fetch-ko.py --out build/ko --variants tools/variants.txt --skip "$SOURCE_VARIANT" --record "$SOURCE_VARIANT"
+      - name: package
+        run: |
+          python3 tools/package.py --root . --build-root build --ko-dir build/ko --variant-list tools/variants.txt --webroot build/webui/dist --output build/SUSFS4LKM-arm64.zip
+          cp tools/ROLLBACK.sh build/ROLLBACK.sh
+          sha256sum build/SUSFS4LKM-arm64.zip build/SUSFS4LKM-arm64.provenance.json build/ROLLBACK.sh > build/SHA256SUMS
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/SUSFS4LKM-arm64.zip
+            build/SUSFS4LKM-arm64.provenance.json
+            build/SHA256SUMS
+            build/ROLLBACK.sh

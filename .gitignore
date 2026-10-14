@@ -1,0 +1,11 @@
+build/
+dist/
+node_modules/
+*.ko
+/susfsctl
+/susfs_insmod
+*.zip
+*.tar
+sources/
+__pycache__/
+*.pyc

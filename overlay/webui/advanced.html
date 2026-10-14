@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SUSFS LKM Advanced</title>
+    <link href="./index.css" rel="stylesheet">
+    <script type="module" src="advanced.js"></script>
+</head>
+<body class="bg-black text-white">
+    <main class="p-4 pb-16 max-w-3xl mx-auto">
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold">LKM Advanced</h1>
+            <a href="custom.html" class="btn btn-sm">Custom</a>
+        </div>
+        <pre id="status" class="whitespace-pre-wrap text-sm border border-white p-3 mb-4"></pre>
+        <div id="actions" class="grid grid-cols-2 gap-2">
+            <button class="btn" id="refresh">Refresh</button>
+            <button class="btn" id="log_on">Log On</button>
+            <button class="btn" id="log_off">Log Off</button>
+            <button class="btn" id="avc_on">AVC On</button>
+            <button class="btn" id="avc_off">AVC Off</button>
+            <button class="btn" id="path_clear">Clear Path</button>
+            <button class="btn" id="kstat_clear">Clear Kstat</button>
+            <button class="btn" id="redirect_clear">Clear Redirect</button>
+            <button class="btn" id="modules_clear">Clear Modules</button>
+            <button class="btn" id="mounts_clear">Clear Mounts</button>
+        </div>
+        <div class="mt-4 space-y-3">
+            <input id="path_input" class="input input-bordered w-full" placeholder="/path">
+            <div class="grid grid-cols-2 gap-2">
+                <button class="btn" id="path_delete">Delete Path</button>
+                <button class="btn" id="kstat_delete">Delete Kstat</button>
+                <button class="btn" id="kstat_full">Full Clone Kstat</button>
+                <button class="btn" id="redirect_delete">Delete Redirect</button>
+            </div>
+            <input id="module_input" class="input input-bordered w-full" placeholder="module_name">
+            <div class="grid grid-cols-2 gap-2">
+                <button class="btn" id="module_add">Add Module</button>
+                <button class="btn" id="module_del">Delete Module</button>
+            </div>
+            <input id="mount_input" class="input input-bordered w-full" placeholder="/mount/prefix">
+            <div class="grid grid-cols-2 gap-2">
+                <button class="btn" id="mount_add">Add Mount</button>
+                <button class="btn" id="mount_del">Delete Mount</button>
+                <button class="btn" id="mounts_reset">Reset Mounts</button>
+            </div>
+            <select id="rule_name" class="select select-bordered w-full">
+                <option value="sus_path">sus_path</option>
+                <option value="sus_path_loop">sus_path_loop</option>
+                <option value="sus_map">sus_map</option>
+                <option value="sus_mount">sus_mount</option>
+                <option value="try_umount">try_umount</option>
+                <option value="open_redirect">open_redirect</option>
+                <option value="kstat">kstat</option>
+            </select>
+            <textarea id="rule_content" class="textarea textarea-bordered w-full h-48"></textarea>
+            <div class="grid grid-cols-2 gap-2">
+                <button class="btn" id="rule_load">Load Boot File</button>
+                <button class="btn" id="rule_save">Save Boot File</button>
+            </div>
+            <p class="text-sm">Buttons above apply immediately. Boot file changes apply after the next reboot.</p>
+        </div>
+        <pre id="output" class="whitespace-pre-wrap text-xs border border-white p-3 mt-4"></pre>
+    </main>
+</body>
+</html>
