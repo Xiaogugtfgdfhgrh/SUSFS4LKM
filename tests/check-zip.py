@@ -29,7 +29,7 @@ with zipfile.ZipFile(zip_path) as archive:
         problems.append("module name")
     if b"author=" not in prop.encode("utf-8"):
         problems.append("author")
-    if b"updateJson=https://raw.githubusercontent.com/32463991/SUSFS4LKM/main/update.json" not in prop.encode("utf-8"):
+    if b"updateJson=https://raw.githubusercontent.com/Xiaogugtfgdfhgrh/SUSFS4LKM/main/update.json" not in prop.encode("utf-8"):
         problems.append("updateJson")
     modes = {name: oct((archive.getinfo(name).external_attr >> 16) & 0o777) for name in names}
     bad_modes = [

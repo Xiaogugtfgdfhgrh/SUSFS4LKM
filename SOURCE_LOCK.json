@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tree_sha256": "852cabf262508ba3e84971294e0d74e87c7c0a585cf3f9ed6c810e7e981278be",
+  "tree_sha256": "eac450d8fd4b13ad99a77b2f60b52567367a8ae4b1cf37474b53da36500f8a22",
   "categories": {
     "sources": {
       "files": 230,
@@ -8,7 +8,7 @@
     },
     "overlay": {
       "files": 24,
-      "sha256": "0eee2c3b8800949361f824b402dee6fa409bd57f6c450c1bc66c43c6d9a053f9"
+      "sha256": "dd9154aa32fdf645dcbfe03fe15a2118595204464d98f2cfe19a12e9bdf60f59"
     },
     "src": {
       "files": 1,
@@ -16,11 +16,11 @@
     },
     "tools": {
       "files": 11,
-      "sha256": "93512b146a8822c5e32221991c2646df9622f685456647eafadff46bc5847180"
+      "sha256": "f034700c126e29f1fb0a4e720eea31428d23ebd01450c39ea74f3e7cefc816e0"
     },
     "tests": {
       "files": 10,
-      "sha256": "794952a23961d351018548596eca5933eb4c4f2742eac299edbe0820ee997145"
+      "sha256": "d365a2a30998b9b80b934f1f37572b3de2a0f8055b82f9610d5d1c25aceb367a"
     }
   },
   "files": [
@@ -58,7 +58,7 @@
     },
     {
       "path": "overlay/module/module.prop",
-      "sha256": "fcadd780fe9754be457b56fc54a41f2819f6bc6833cbc2689530aa2c7548497b"
+      "sha256": "16565a440d7bfccd19b40260b7aabd0a7b9ec713b07cd51397b6176177f1cc8f"
     },
     {
       "path": "overlay/module/post-fs-data.sh",
@@ -1054,7 +1054,7 @@
     },
     {
       "path": "tests/check-zip.py",
-      "sha256": "5946b6c6f320f3d34425c29efae5501184489d575ccecee3c5abd39b7866069e"
+      "sha256": "523a3f2a50261492a8bea81861d1903a3d94919e8fb166039a84665fb58e1816"
     },
     {
       "path": "tests/device/json-command-full.sh",
@@ -1102,7 +1102,7 @@
     },
     {
       "path": "tools/check-version.py",
-      "sha256": "6b489af6642b273d9cbdf1d7e0252eceb3bba07a90479ed96e253a6b756a3f49"
+      "sha256": "fb9a469fa119ebe10196b5cde86b64218f25c9d17395f9936633ec8bbf73f726"
     },
     {
       "path": "tools/fetch-ko.py",

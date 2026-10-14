@@ -4,7 +4,7 @@ import re
 import sys
 from pathlib import Path
 
-REPO = "https://github.com/32463991/SUSFS4LKM"
+REPO = "https://github.com/Xiaogugtfgdfhgrh/SUSFS4LKM"
 
 
 def prop(root, name):
