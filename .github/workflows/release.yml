@@ -10,12 +10,12 @@ permissions:
   contents: write
 
 env:
-  SOURCE_VARIANT: android14-6.1
   NDK_VERSION: 29.0.14206865
-  DDK_DIGEST: sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3
+  QUALIFIED_VARIANT: android14-6.1
+  QUALIFIED_DDK_DIGEST: sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3
 
 jobs:
-  build:
+  prepare:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -29,19 +29,25 @@ jobs:
           else
             python3 tools/check-version.py . -
           fi
-      - name: fetch sources
-        run: python3 tools/fetch-sources.py .
-      - name: verify source lock
-        run: python3 tools/source_lock.py .
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "20"
-          cache: npm
-          cache-dependency-path: sources/webui/package-lock.json
-      - name: free disk space
+      - name: fetch and verify sources
         run: |
-          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android/sdk/emulator /usr/share/swift /opt/hostedtoolcache/CodeQL
-          docker image prune -af
+          python3 tools/fetch-sources.py .
+          python3 tools/source_lock.py .
+      - uses: actions/upload-artifact@v4
+        with:
+          name: sources
+          path: sources
+          retention-days: 1
+
+  helper:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: sources
+          path: sources
       - name: install ndk
         run: |
           SDK_ROOT="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
@@ -56,20 +62,116 @@ jobs:
           mkdir -p build
           "$CC" --target=aarch64-linux-android21 -std=gnu11 -O2 -Wall -Wextra -Wno-unused-parameter -I sources/cjson src/susfsctl/main.c sources/cjson/cJSON.c -o build/susfsctl
           "$CC" --target=aarch64-linux-gnu -O2 -nostdlib -static-pie -fno-stack-protector -fno-builtin -fuse-ld=lld -Wl,-e,_start sources/lkm/tools/susfs_insmod.c -o build/susfs_insmod
+      - uses: actions/upload-artifact@v4
+        with:
+          name: helper
+          path: |
+            build/susfsctl
+            build/susfs_insmod
+          retention-days: 1
+
+  webui:
+    needs: prepare
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: sources
+          path: sources
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: sources/webui/package-lock.json
       - name: build webui
         run: |
-          rm -rf build/webui
+          mkdir -p build
           cp -a sources/webui build/webui
           cp -a overlay/webui/. build/webui/
           cd build/webui
           npm ci
           npm run build
+      - uses: actions/upload-artifact@v4
+        with:
+          name: webui-dist
+          path: build/webui/dist
+          retention-days: 1
+
+  lkm:
+    needs: prepare
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        variant:
+          - android12-5.10
+          - android13-5.10
+          - android13-5.15
+          - android14-5.15
+          - android14-6.1
+          - android15-6.6
+          - android16-6.12
+          - android17-6.18
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: sources
+          path: sources
+      - name: free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/lib/android/sdk/emulator /usr/share/swift /opt/hostedtoolcache/CodeQL
+          docker image prune -af
       - name: build lkm
+        env:
+          SUSFS_DDK_DIGEST: ${{ matrix.variant == env.QUALIFIED_VARIANT && env.QUALIFIED_DDK_DIGEST || '' }}
         run: |
           mkdir -p build/ko
-          SUSFS_BUILD_ROOT="$PWD/build" SUSFS_DDK_DIGEST="$DDK_DIGEST" sh tools/build-lkm.sh "$PWD" "$PWD/build" "$SOURCE_VARIANT"
-      - name: fetch pinned ko
-        run: python3 tools/fetch-ko.py --out build/ko --variants tools/variants.txt --skip "$SOURCE_VARIANT" --record "$SOURCE_VARIANT"
+          SUSFS_BUILD_ROOT="$PWD/build" sh tools/build-lkm.sh "$PWD" "$PWD/build" "${{ matrix.variant }}"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: lkm-${{ matrix.variant }}
+          path: |
+            build/ko/susfs_guard_lkm-${{ matrix.variant }}.ko
+            build/ko/ddk-${{ matrix.variant }}.json
+          retention-days: 1
+
+  package:
+    needs:
+      - helper
+      - webui
+      - lkm
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/download-artifact@v4
+        with:
+          name: sources
+          path: sources
+      - uses: actions/download-artifact@v4
+        with:
+          name: helper
+          path: build
+      - uses: actions/download-artifact@v4
+        with:
+          name: webui-dist
+          path: build/webui/dist
+      - uses: actions/download-artifact@v4
+        with:
+          pattern: lkm-*
+          merge-multiple: true
+          path: build/ko
+      - name: record ko provenance
+        run: |
+          ARGS=""
+          for variant in $(cat tools/variants.txt); do
+            ARGS="$ARGS --record $variant"
+          done
+          python3 tools/fetch-ko.py --out build/ko --variants tools/variants.txt --only-record $ARGS
       - name: package
         run: |
           python3 tools/package.py --root . --build-root build --ko-dir build/ko --variant-list tools/variants.txt --webroot build/webui/dist --output build/SUSFS4LKM-arm64.zip

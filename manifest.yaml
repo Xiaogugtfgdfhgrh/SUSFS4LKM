@@ -28,9 +28,16 @@ build:
   ddk_image_template: ghcr.io/ylarod/ddk-min:<variant>-20260828
   qualification_ddk_digest: sha256:1dd6ac340b627a90a4031d6d0df6b129d8cc949b139fb56032c898f023d3d5d3
   source_built_variants:
+    - android12-5.10
+    - android13-5.10
+    - android13-5.15
+    - android14-5.15
     - android14-6.1
-  non_qualification_variant_source: inforcqb/susfs4ksu-lkm v2.3.0-r18.1
-  non_qualification_release_url: https://github.com/inforcqb/susfs4ksu-lkm/releases/download/v2.3.0-r18.1
+    - android15-6.6
+    - android16-6.12
+    - android17-6.18
+  upstream_variant_fallback: inforcqb/susfs4ksu-lkm v2.3.0-r18.1
+  upstream_variant_fallback_url: https://github.com/inforcqb/susfs4ksu-lkm/releases/download/v2.3.0-r18.1
   lkm_variants:
     - android12-5.10
     - android13-5.10

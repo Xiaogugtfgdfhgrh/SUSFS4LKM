@@ -49,6 +49,7 @@ def main():
     parser.add_argument("--variants", required=True)
     parser.add_argument("--skip", action="append", default=[])
     parser.add_argument("--record", action="append", default=[])
+    parser.add_argument("--only-record", action="store_true")
     args = parser.parse_args()
 
     out = Path(args.out)
@@ -57,7 +58,7 @@ def main():
     meta_path = out / "ko-sources.json"
     meta = json.loads(meta_path.read_text(encoding="utf-8")) if meta_path.exists() else {}
 
-    for variant in variants:
+    for variant in ([] if args.only_record else variants):
         if variant in args.skip:
             continue
         expected = ASSETS.get(variant)

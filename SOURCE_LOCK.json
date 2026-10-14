@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "tree_sha256": "15c132cb5c164a8d6d6316b2be21f0d32d50e3e114ff4d0fd61c39e47ef29dd6",
+  "tree_sha256": "917b64bc84266ffc42ea25780317bd0e2dc9d260a5b97d351025b7efe59db59c",
   "categories": {
     "sources": {
       "files": 230,
@@ -12,21 +12,21 @@
     },
     "src": {
       "files": 1,
-      "sha256": "8cb88f83d19b31fe144104034efc083234bb638f454ac0c8b9e9c0bce1c9f849"
+      "sha256": "ce914b255ff1f5be4df51bdf87abbb6e7c9a1c5049a14793bef723ce52e13adc"
     },
     "tools": {
       "files": 11,
-      "sha256": "12d406f1266094e694f2fb65f347c3d6480e60a99527300957f7f8f3a760eac6"
+      "sha256": "e8673d63b1ce3be9652b283f93e558c14679081ebf6890defb84458b7fa5fac9"
     },
     "tests": {
-      "files": 10,
-      "sha256": "d365a2a30998b9b80b934f1f37572b3de2a0f8055b82f9610d5d1c25aceb367a"
+      "files": 11,
+      "sha256": "af730da48884f9dd7cdb57cdd3c1a361da2d928c87c56b7904c45cfe2d005568"
     }
   },
   "files": [
     {
       "path": "manifest.yaml",
-      "sha256": "8ec94644f3bd62ce48a9db84f4f2ccbec0c856423ecb3da89c053b90969f3f34"
+      "sha256": "2c890ff9c74a9ea834aa1384df008c9c92c006deadda707cf9e54d4e4b139cd1"
     },
     {
       "path": "overlay/module/action.sh",
@@ -1046,7 +1046,7 @@
     },
     {
       "path": "src/susfsctl/main.c",
-      "sha256": "6e3785516e62d685a0c1eb715e83d2c2f812d24bdff4d82fc33ec516fad770df"
+      "sha256": "50328568c26c60039b4fdfe01ab60b8570ab7438ffe8a5010d8876508b975ec9"
     },
     {
       "path": "tests/check-ko.py",
@@ -1081,6 +1081,10 @@
       "sha256": "f3a6c196e15c69e23424f81c332b239d81eda9d432e1db332dfffb2190098acc"
     },
     {
+      "path": "tests/device/susmap_probe.c",
+      "sha256": "836623c8cc752d6bf52467f48ad03fdb9c9cf2a24d4e1210867051dd57786c58"
+    },
+    {
       "path": "tests/parse-sources.py",
       "sha256": "11487b1777206942452d4427fefd5b620bc0cb3c870ba5f0870b7902f4ac0f95"
     },
@@ -1106,7 +1110,7 @@
     },
     {
       "path": "tools/fetch-ko.py",
-      "sha256": "ffb3d7f6e3f59205f9678922d15270f9c9b2e960829d5b488c7034feca1c223b"
+      "sha256": "2fedff435da940cace6f581a7e590c6313cdfcd85dbbeb35ade24dd6ba9266cb"
     },
     {
       "path": "tools/fetch-sources.py",

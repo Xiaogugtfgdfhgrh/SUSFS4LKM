@@ -2219,7 +2219,7 @@ static int proc_operation(const char *operation, cJSON *values) {
                 return -EINVAL;
             }
             if (strlen(command) + strlen(item->valuestring) + 2 >= sizeof(command)) return -E2BIG;
-            if (item != items->child) strcat(command, " ");
+            strcat(command, " ");
             strcat(command, item->valuestring);
         }
         return write_node(!strcmp(operation, "modules.set") ? "/proc/susfs_hide_modules" : "/proc/susfs_hide_mounts", command);
